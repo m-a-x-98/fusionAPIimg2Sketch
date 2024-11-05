@@ -4,6 +4,28 @@ import numpy as np
 from skimage.morphology import skeletonize
 from tqdm import tqdm
 
+
+
+'''
+Ide til algoritme
+Ha en algoritme for å fjerne alle enere midt i / hente ut alle kant-enere (kanskje ignorere kant-enere som er liksom inni en blob, aka hver ener grenser kun til 2/3 nullere i en 3x3 grid rundt )
+Legge alle kantenere inn i en liste der hvert punkt i listen bare er koordinater til punktet (x, y)
+
+Algoritme for å gruppere disse punktene 
+    1. Velg et punkt i listen (feks første) og slett det fra listen - lagre det i en variabel
+    2. Søk igjennom listen til man finner de to nabopunktene (aka de to punktene med avstand 1 (i en 3x3 grid rundt punktet))
+    3. Velg et av punktene, lagre det andre i en variabel a - slett begge fra listen 
+    4. Søk etter nabopunktet til det valgte punktet over, legg det til i en liste og slett punktet fra hovedlisten
+    5. Fortsett til punktet man finner er a 
+    6. Vi har nå funnet én blob, gjenta for å finne resten av blobbene (aka til hovedlisten er tom)
+Kan kanskje bruke recursion?
+
+
+'''
+
+
+
+
 img = cv2.imread("img2.jpg",0)
 #sharpen_kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
 #img = cv2.filter2D(img, -1, sharpen_kernel)
