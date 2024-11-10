@@ -21,7 +21,13 @@ Algoritme for å gruppere disse punktene
 Kan kanskje bruke recursion?
 
 
+#Nyttige ting https://numpy.org/doc/2.1/reference/generated/numpy.meshgrid.html
+https://numpy.org/doc/2.1/reference/generated/numpy.where.html
+numpy sparse 
+
 '''
+
+
 
 
 
