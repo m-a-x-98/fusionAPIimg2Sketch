@@ -4,14 +4,62 @@ from skimage.morphology import skeletonize
 import numpy as np
 from tqdm import tqdm
 from skimage import img_as_ubyte
+from scipy.ndimage import convolve
 
-img = cv2.imread("canny_edges.jpg",0)
+
+#img = cv2.imread("imgCog.webp",0)
+img = cv2.imread("imgFlower.webp",0)
+
 
 
 #img = cv2.Canny(np.uint8(img),100,255)
 img = cv2.bitwise_not(img) < 128
 #img = skeletonize(img).astype(np.uint8)*255
 #cv2.imwrite('canny_edges.jpg', img)
+
+kernel = np.array([
+    [0, 1, 0],
+    [1, 1, 1],
+    [0, 1, 0]
+])
+
+neighbor_sums = convolve(img.astype(int), kernel, mode='constant', cval=0)
+mask = neighbor_sums > 4
+img = np.where(mask, 0, img)
+
+
+def remove(ls, img):
+    kernel = np.array([
+        [ls[0], ls[1], ls[2]],
+        [ls[3], ls[4], ls[5]],
+        [ls[6], ls[7], ls[8]]
+    ])
+
+    neighbor_sums = convolve(img.astype(int), kernel, mode='constant', cval=0)
+    mask = neighbor_sums > 1
+    return np.where(mask, 0, img)
+
+def remove2(ls, img):
+    kernel = np.array([
+        [ls[0], ls[1], ls[2]],
+        [ls[3], ls[4], ls[5]],
+        [ls[6], ls[7], ls[8]]
+    ])
+
+    neighbor_sums = convolve(img.astype(int), kernel, mode='constant', cval=0)
+    mask = neighbor_sums < 2
+    return np.where(mask, 0, img)
+
+img = remove([0,0,0,  1,0,0,  0,1,0], img)
+img = remove([0,0,0,  0,0,1,  0,1,0], img)
+img = remove([0,1,0,  1,0,0,  0,0,0], img)
+img = remove([0,1,0,  0,0,1,  0,0,0], img)
+
+# --- optional ----
+#for i in range(30):
+#    img = remove2([1,1,1,  1,0,1,  1,1,1], img)
+
+
 
 '''for n in tqdm(range(1, len(img)-1)):
     for k in range(1, len(img[0])-1):
@@ -20,8 +68,15 @@ img = cv2.bitwise_not(img) < 128
             + int(img[n+1][k-1]) + int(img[n+1][k]) + int(img[n+1][k+1]) > 3:
             img[n][k] = 0'''
 
-#plt.imshow(img, cmap=plt.cm.gray)
-#plt.show()
+# instead of skeletonize - can check if a pixel has pixels to the left and down or left and up or right...
+
+# kan do this also instead of canny, check all the pixels which DONT have pixels on all four sides - add them to a new image 
+# maybe use numpy vectorization on the last on? 
+
+
+
+plt.imshow(img, cmap=plt.cm.gray)
+plt.show()
 
 imgZero = np.zeros_like(img)
 
